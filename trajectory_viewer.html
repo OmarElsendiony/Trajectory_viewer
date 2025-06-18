@@ -274,7 +274,27 @@
 
                         trajectoryTurnComponent.appendChild(keyElement);
                         let valueElement = document.createElement('span');
-                        valueElement.innerText = turn[key] + " "; // Add space after each value
+                        if (key != 'tool_calls'){
+                            valueElement.innerText = turn[key] + " ";
+                        }
+                        else {
+                            if (!turn[key] || turn[key].length === 0) {
+                                valueElement.innerText = "No tool calls";
+                            }
+                            else if (turn[key].length == 1) {
+                                valueElement.innerText = JSON.stringify(turn[key][0]);
+                            }
+                            else if (turn[key].length > 1) {
+                                valueElement.innerText = "Tool calls: ";
+                                calls = turn[key]; // Add space after each value
+                                for (let i = 0; i < calls.length; i++) {
+                                    if (i > 0) {
+                                        valueElement.innerText += ', ';
+                                    }
+                                    valueElement.innerText += JSON.stringify(calls[i]);
+                                }
+                            }
+                        }
                         trajectoryTurnComponent.appendChild(valueElement);
 
                         trajectoryTurn.appendChild(trajectoryTurnComponent);
