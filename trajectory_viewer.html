@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: black;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-container {
+            height: calc(100vh - 80px);
+        }
+
+        option {
+            color: black !important;
+        }
+
+        .textbox-container {
+            margin-bottom: 1rem;
+        }
+
+        .textbox-label {
+            color: white;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: block;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .content-area {
+            /* flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center; */
+            padding: 2rem;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #fafbfc;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            background: white;
+        }
+
+        .form-textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .query-btn {
+            width: 100%;
+            padding: 1rem 2rem;
+            margin: 1.1rem 0;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .query-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .query-btn:active {
+            transform: translateY(0);
+        }
+
+        .trajectory-turn {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #fafbfc;
+            margin-top: 1rem;
+            /* border: 4px solid #667eea; */
+        }
+
+        .trajectory-element {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .savePageContainer{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+            padding: 20px;
+        }
+
+        .save-button {
+            display: inline;
+            visibility: hidden;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(238, 90, 82, 0.3);
+            margin-bottom: 20px;            
+        }
+        
+        .save-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(238, 90, 82, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 200px;
+            }
+            
+            .content-area {
+                padding: 1rem;
+            }
+            
+            .form-container {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="logo">
+            <img src="turing_logo.svg" alt="turing image" style="width: 100px; scale: 1.5; display: block; margin: 0 auto;">
+
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <main class="content-area">
+            <h2 class="form-title">Enter JSON here</h2>
+            <textarea class="form-input form-textarea" placeholder="Enter your query here..."></textarea>
+            <button class="query-btn">Create Trajectory</button>
+
+            <h2 class="form-title">Trajectory</h2>
+            <div id="trajectory-container"></div>
+        </main>
+
+        <div class ="savePageContainer">
+            <button class="save-button" onclick="saveFilteredHTML()">
+                💾 Save Trajectory
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactivity
+        queryBtn = document.querySelector('.query-btn')
+        trajectoryContainer = document.querySelector('#trajectory-container')
+
+        queryBtn.onclick = async function() {
+            console.log("hello")
+            const textarea = document.querySelector('.form-input');
+            const query = textarea.value;
+            if (!query) {
+                alert("Please enter a valid JSON query.");
+                return;
+            }
+            
+            const query_JSON = JSON.parse(query); // Validate JSON format
+            console.log("Query:", query_JSON['traj']);
+
+            
+            for (turn of query_JSON['traj']) {
+                console.log("Turn:", turn);
+                let trajectoryElement = document.createElement('div');
+                trajectoryElement.className = 'trajectory-element';
+
+                let trajectoryTurn = document.createElement('div');
+                trajectoryTurn.contentEditable = true;
+                trajectoryTurn.className = 'trajectory-turn';
+                trajectoryTurn.style.border = "4px solid #667eea";
+
+                for (let key in turn) {
+                    if (turn.hasOwnProperty(key)) {
+                        let keyElement = document.createElement('strong');
+                        keyElement.innerText = key + ": ";
+                        let trajectoryTurnComponent = document.createElement('div');
+                        trajectoryTurnComponent.className = 'trajectory-turn-component';
+
+                        trajectoryTurnComponent.appendChild(keyElement);
+                        let valueElement = document.createElement('span');
+                        valueElement.innerText = turn[key] + " "; // Add space after each value
+                        trajectoryTurnComponent.appendChild(valueElement);
+
+                        trajectoryTurn.appendChild(trajectoryTurnComponent);
+                    }
+                }
+
+                // trajectoryTurn.innerText = turn.content // Format JSON for better readability
+                // trajectoryContainer.innerHTML = ''; // Clear previous buttons
+                
+                turnIcon = document.createElement('div');
+                if (turn.role == "assistant"){
+                    turnIcon.innerHTML = "<img src='chatbot.png' alt='Assistant Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
+                }
+                else if (turn.role == "user"){
+                    turnIcon.innerHTML = "<img src='profile.png' alt='User Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
+                    trajectoryTurn.style.border = "4px solid #00BFFF";
+
+                }
+                else {
+                    turnIcon.innerHTML = "<img src='settings.png' alt='System Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
+                    trajectoryTurn.style.border = "4px solid #FF69B4";
+                }
+
+    
+                trajectoryElement.appendChild(turnIcon);
+                trajectoryElement.appendChild(trajectoryTurn);
+    
+                trajectoryContainer.appendChild(trajectoryElement);
+            }
+
+            document.getElementsByClassName("save-button")[0].style.visibility = "visible";
+        }
+
+        function showMessage(text) {
+            // Create temporary message
+            const message = document.createElement('div');
+            message.textContent = text;
+            message.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4caf50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-family: Arial, sans-serif;
+                transition: all 0.3s ease;
+            `;
+            
+            document.body.appendChild(message);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                message.style.opacity = '0';
+                message.style.transform = 'translateY(-20px)';
+                setTimeout(() => {
+                    document.body.removeChild(message);
+                }, 300);
+            }, 3000);
+        }
+
+
+        function saveFilteredHTML() {
+            // Clone the entire document
+            const clonedDoc = document.cloneNode(true);
+            
+            // Remove elements with specific classes
+            const elementsToExclude = clonedDoc.querySelectorAll('.save-button');
+            elementsToExclude.forEach(element => {
+                element.remove();
+            });
+
+            const formTitle = clonedDoc.querySelector('main.content-area .form-title');
+            if (formTitle) {
+                formTitle.remove();
+            }
+            
+            const formTextarea = clonedDoc.querySelector('main.content-area .form-textarea');
+            if (formTextarea) {
+                formTextarea.remove();
+            }
+            
+            const queryBtn = clonedDoc.querySelector('main.content-area .query-btn');
+            if (queryBtn) {
+                queryBtn.remove();
+            }
+            
+            // Get the HTML content
+            const htmlContent = clonedDoc.documentElement.outerHTML;
+            
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'filtered_page.html';
+            
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            URL.revokeObjectURL(url);
+            showMessage('Page saved successfully!');
+        }
+    </script>
+</body>
+</html>
