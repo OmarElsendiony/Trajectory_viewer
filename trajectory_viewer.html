@@ -254,77 +254,86 @@
             const query_JSON = JSON.parse(query); // Validate JSON format
             console.log("Query:", query_JSON['traj']);
 
-            
-            for (turn of query_JSON['traj']) {
-                console.log("Turn:", turn);
-                let trajectoryElement = document.createElement('div');
-                trajectoryElement.className = 'trajectory-element';
-
-                let trajectoryTurn = document.createElement('div');
-                trajectoryTurn.contentEditable = true;
-                trajectoryTurn.className = 'trajectory-turn';
-                trajectoryTurn.style.border = "4px solid #667eea";
-
-                for (let key in turn) {
-                    if (turn.hasOwnProperty(key)) {
-                        let keyElement = document.createElement('strong');
-                        keyElement.innerText = key + ": ";
-                        let trajectoryTurnComponent = document.createElement('div');
-                        trajectoryTurnComponent.className = 'trajectory-turn-component';
-
-                        trajectoryTurnComponent.appendChild(keyElement);
-                        let valueElement = document.createElement('span');
-                        if (key != 'tool_calls'){
-                            valueElement.innerText = turn[key] + " ";
-                        }
-                        else {
-                            if (!turn[key] || turn[key].length === 0) {
-                                valueElement.innerText = "No tool calls";
+            trials = query_JSON['results'];
+            // console.log("Trials:", trials);
+            // trial
+            for (trial of trials) {
+                let trial_number = document.createElement('h2');
+                trial_number.innerText = "Trial " + (trial['trial'] + 1);
+                trial_number.style.color = "red";
+                // trial_number.style.textAlign = "center";
+                trial_number.style.margin = "20px";
+                trajectoryContainer.appendChild(trial_number);
+                for (turn of trial['traj']) {
+                    // console.log("Turn:", turn);
+                    let trajectoryElement = document.createElement('div');
+                    trajectoryElement.className = 'trajectory-element';
+    
+                    let trajectoryTurn = document.createElement('div');
+                    trajectoryTurn.contentEditable = true;
+                    trajectoryTurn.className = 'trajectory-turn';
+                    trajectoryTurn.style.border = "4px solid #667eea";
+    
+                    for (let key in turn) {
+                        if (turn.hasOwnProperty(key)) {
+                            let keyElement = document.createElement('strong');
+                            keyElement.innerText = key + ": ";
+                            let trajectoryTurnComponent = document.createElement('div');
+                            trajectoryTurnComponent.className = 'trajectory-turn-component';
+    
+                            trajectoryTurnComponent.appendChild(keyElement);
+                            let valueElement = document.createElement('span');
+                            if (key != 'tool_calls'){
+                                valueElement.innerText = turn[key] + " ";
                             }
-                            else if (turn[key].length == 1) {
-                                valueElement.innerText = JSON.stringify(turn[key][0]);
-                            }
-                            else if (turn[key].length > 1) {
-                                valueElement.innerText = "Tool calls: ";
-                                calls = turn[key]; // Add space after each value
-                                for (let i = 0; i < calls.length; i++) {
-                                    if (i > 0) {
-                                        valueElement.innerText += ', ';
+                            else {
+                                if (!turn[key] || turn[key].length === 0) {
+                                    valueElement.innerText = "No tool calls";
+                                }
+                                else if (turn[key].length == 1) {
+                                    valueElement.innerText = JSON.stringify(turn[key][0]);
+                                }
+                                else if (turn[key].length > 1) {
+                                    valueElement.innerText = "Tool calls: ";
+                                    calls = turn[key]; // Add space after each value
+                                    for (let i = 0; i < calls.length; i++) {
+                                        if (i > 0) {
+                                            valueElement.innerText += ', ';
+                                        }
+                                        valueElement.innerText += JSON.stringify(calls[i]);
                                     }
-                                    valueElement.innerText += JSON.stringify(calls[i]);
                                 }
                             }
+                            trajectoryTurnComponent.appendChild(valueElement);
+    
+                            trajectoryTurn.appendChild(trajectoryTurnComponent);
                         }
-                        trajectoryTurnComponent.appendChild(valueElement);
-
-                        trajectoryTurn.appendChild(trajectoryTurnComponent);
                     }
-                }
-
-                // trajectoryTurn.innerText = turn.content // Format JSON for better readability
-                // trajectoryContainer.innerHTML = ''; // Clear previous buttons
-                
-                turnIcon = document.createElement('div');
-                if (turn.role == "assistant"){
-                    turnIcon.innerHTML = "<img src='chatbot.png' alt='Assistant Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
-                }
-                else if (turn.role == "user"){
-                    turnIcon.innerHTML = "<img src='profile.png' alt='User Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
-                    trajectoryTurn.style.border = "4px solid #00BFFF";
-
-                }
-                else {
-                    turnIcon.innerHTML = "<img src='settings.png' alt='System Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
-                    trajectoryTurn.style.border = "4px solid #FF69B4";
-                }
-
     
-                trajectoryElement.appendChild(turnIcon);
-                trajectoryElement.appendChild(trajectoryTurn);
+                    // trajectoryTurn.innerText = turn.content // Format JSON for better readability
+                    // trajectoryContainer.innerHTML = ''; // Clear previous buttons
+                    
+                    turnIcon = document.createElement('div');
+                    if (turn.role == "assistant"){
+                        turnIcon.innerHTML = "<img src='chatbot.png' alt='Assistant Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
+                    }
+                    else if (turn.role == "user"){
+                        turnIcon.innerHTML = "<img src='profile.png' alt='User Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
+                        trajectoryTurn.style.border = "4px solid #00BFFF";
     
-                trajectoryContainer.appendChild(trajectoryElement);
+                    }
+                    else {
+                        turnIcon.innerHTML = "<img src='settings.png' alt='System Icon' style='width: 50px; height: 50px; border-radius: 50%; margin-right: 10px;'>";
+                        trajectoryTurn.style.border = "4px solid #FF69B4";
+                    }
+    
+        
+                    trajectoryElement.appendChild(turnIcon);
+                    trajectoryElement.appendChild(trajectoryTurn);
+        
+                    trajectoryContainer.appendChild(trajectoryElement);
+                }
             }
-
             document.getElementsByClassName("save-button")[0].style.visibility = "visible";
         }
 
