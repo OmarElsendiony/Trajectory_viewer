@@ -252,12 +252,14 @@
             }
             
             const query_JSON = JSON.parse(query); // Validate JSON format
-            console.log("Query:", query_JSON['traj']);
+            // console.log("Query:", query_JSON['traj']);
 
             trials = query_JSON['results'];
-            // console.log("Trials:", trials);
-            // trial
+            if (trials == null || typeof trials[Symbol.iterator] !== 'function') {
+                trials = [query_JSON];
+            }
             for (trial of trials) {
+                console.log("Trial:", trial);
                 let trial_number = document.createElement('h2');
                 trial_number.innerText = "Trial " + (trial['trial'] + 1);
                 trial_number.style.color = "red";
@@ -291,7 +293,7 @@
                                     valueElement.innerText = "No tool calls";
                                 }
                                 else if (turn[key].length == 1) {
-                                    valueElement.innerText = JSON.stringify(turn[key][0]);
+                                    valueElement.innerText = JSON.stringify(turn[key][0], null, 2);
                                 }
                                 else if (turn[key].length > 1) {
                                     valueElement.innerText = "Tool calls: ";
@@ -300,7 +302,8 @@
                                         if (i > 0) {
                                             valueElement.innerText += ', ';
                                         }
-                                        valueElement.innerText += JSON.stringify(calls[i]);
+                                        valueElement.innerText += JSON.stringify(calls[i], null, 2);
+                                        // console.log("Tool call:", calls[i]);
                                     }
                                 }
                             }
